@@ -1,0 +1,14 @@
+.{
+    .name = "typeid",
+    .version = "1.0.0",
+    .dependencies = .{
+        .uuid = .{
+            .url = "https://github.com/tensorush/zig-uuid/archive/v1.1.1.tar.gz",
+            .hash = "12203cd3acdec79ac399cecdc37b623764f7f2fc9dc847c8cc0f153a5fae0306158a",
+        },
+        .base32 = .{
+            .url = "https://github.com/tensorush/zig-base32/archive/v1.0.0.tar.gz",
+            .hash = "12203215807baa849d704c18ff206e80b4c5e7f4c0d156f2ae47f072b3641e815ed5",
+        },
+    },
+}
