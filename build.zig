@@ -19,7 +19,7 @@ pub fn build(b: *std.Build) void {
         .root_source_file = root_source_file,
         .target = b.standardTargetOptions(.{}),
         .optimize = .ReleaseSafe,
-        .version = .{ .major = 1, .minor = 0, .patch = 0 },
+        .version = .{ .major = 1, .minor = 0, .patch = 1 },
     });
     lib.emit_docs = .emit;
     lib.addModule("Uuid", uuid_mod);

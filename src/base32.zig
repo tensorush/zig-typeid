@@ -1,4 +1,4 @@
-//! Optimized Crockford base32 encoding.
+//! Optimized Crockford Base32 encoding.
 //! Source: https://www.crockford.com/base32.html
 
 const std = @import("std");
@@ -35,7 +35,7 @@ const DEC = [_]u8{
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 };
 
-/// Encodes UUID into a base32 string.
+/// Encodes UUID into a Base32 string.
 pub fn encode(src: [16]u8) [26]u8 {
     var dst: [26]u8 = undefined;
 
@@ -69,7 +69,7 @@ pub fn encode(src: [16]u8) [26]u8 {
     return dst;
 }
 
-/// Decodes UUID from a base32 string.
+/// Decodes UUID from a Base32 string.
 pub fn decode(str: [26]u8) error{InvalidSuffixCharacter}![16]u8 {
     if (DEC[str[0]] == 0xFF or
         DEC[str[1]] == 0xFF or

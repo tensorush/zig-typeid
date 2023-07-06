@@ -4,6 +4,8 @@ const std = @import("std");
 const Uuid = @import("Uuid");
 const base32 = @import("base32.zig");
 
+const hasGetPrefixFn = std.meta.trait.hasFn("getPrefix");
+
 pub const Error = error{
     InvalidPrefixCharacter,
     InvalidSuffixCharacter,
@@ -11,10 +13,9 @@ pub const Error = error{
     InvalidSuffixLength,
     InvalidFormat,
     InvalidPrefix,
+    InvalidSuffix,
     NoGetPrefixFn,
 } || Uuid.Error || std.fmt.BufPrintError;
-
-const hasGetPrefixFn = std.meta.trait.hasFn("getPrefix");
 
 /// Type-safe extension of UUIDv7.
 pub fn TypeId(comptime T: type) Error!type {
@@ -55,6 +56,9 @@ pub fn TypeId(comptime T: type) Error!type {
                 const uuid = Uuid.V7.new();
                 suffix_base32 = base32.encode(uuid.bytes);
             } else if (suffix.len == 26) {
+                if (suffix[0] > '7') {
+                    return error.InvalidSuffix;
+                }
                 @memcpy(suffix_base32[0..], suffix);
                 _ = try base32.decode(suffix_base32);
             } else {
@@ -95,7 +99,7 @@ pub fn TypeId(comptime T: type) Error!type {
             return self.prefix;
         }
 
-        /// Returns the UUID suffix of the TypeID in its base32 representation.
+        /// Returns the UUID suffix of the TypeID in its Base32 representation.
         pub fn getSuffix(self: Self) []const u8 {
             return self.suffix[0..];
         }
@@ -206,6 +210,8 @@ const VALID_TESTS = [_]struct {
     .{ .T = .{ .empty = TestEmpty{} }, .tid = "0000000000000000000000000g", .prefix = "", .uuid = "00000000-0000-0000-0000-000000000010" },
     // Suffix is 32.
     .{ .T = .{ .empty = TestEmpty{} }, .tid = "00000000000000000000000010", .prefix = "", .uuid = "00000000-0000-0000-0000-000000000020" },
+    // Suffix is a maximum valid value.
+    .{ .T = .{ .empty = TestEmpty{} }, .tid = "7zzzzzzzzzzzzzzzzzzzzzzzzz", .prefix = "", .uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff" },
     // Valid alphabet.
     .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_0123456789abcdefghjkmnpqrs", .prefix = "prefix", .uuid = "0110c853-1d09-52d8-d73e-1194e95b5f19" },
     // Valid UUIDv7 suffix.
@@ -246,11 +252,13 @@ const INVALID_TESTS = [_]struct {
     // The suffix should be lowercase with no uppercase letters.
     .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_123456789-123456789-123456", .err = Error.InvalidSuffixCharacter },
     // The suffix should only have letters from the spec's alphabet.
-    .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_ooooooiiiiiiuuuuuuulllllll", .err = Error.InvalidSuffixCharacter },
-    // The suffix should not have any ambiguous characters from the base32 encoding.
-    .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_i23456789ol23456789oi23456", .err = Error.InvalidSuffixCharacter },
-    // The suffix can't ignore hyphens as in the base32 encoding.
+    .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_ooooooiiiiiiuuuuuuulllllll", .err = Error.InvalidSuffix },
+    // The suffix should not have any ambiguous characters from the Crockford Base32 encoding.
+    .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_i23456789ol23456789oi23456", .err = Error.InvalidSuffix },
+    // The suffix can't ignore hyphens as in the Crockford Base32 encoding.
     .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_123456789-0123456789-0123456", .err = Error.InvalidSuffixLength },
+    // The first suffix that overflows into 129 bits.
+    .{ .T = .{ .prefix = TestPrefix{} }, .tid = "prefix_8zzzzzzzzzzzzzzzzzzzzzzzzz", .err = Error.InvalidSuffix },
 };
 
 test "new/fromString" {
