@@ -3,8 +3,8 @@
 [![CI][ci-shield]][ci-url]
 [![CD][cd-shield]][cd-url]
 [![Docs][docs-shield]][docs-url]
+[![Codecov][codecov-shield]][codecov-url]
 [![License][license-shield]][license-url]
-[![Resources][resources-shield]][resources-url]
 
 ### Zig implementation of [TypeID](https://github.com/jetpack-io/typeid), a type-safe extension of UUIDv7, created by the [jetpack.io team](https://www.jetpack.io/).
 
@@ -54,7 +54,7 @@
 [cd-url]: https://github.com/tensorush/zig-typeid/blob/main/.github/workflows/cd.yaml
 [docs-shield]: https://img.shields.io/badge/click-F6A516?style=for-the-badge&logo=zig&logoColor=F6A516&label=docs&labelColor=black
 [docs-url]: https://tensorush.github.io/zig-typeid
+[codecov-shield]: https://img.shields.io/codecov/c/github/tensorush/zig-typeid?style=for-the-badge&labelColor=black
+[codecov-url]: https://app.codecov.io/gh/tensorush/zig-typeid
 [license-shield]: https://img.shields.io/github/license/tensorush/zig-typeid.svg?style=for-the-badge&labelColor=black
 [license-url]: https://github.com/tensorush/zig-typeid/blob/main/LICENSE.md
-[resources-shield]: https://img.shields.io/badge/click-F6A516?style=for-the-badge&logo=zig&logoColor=F6A516&label=resources&labelColor=black
-[resources-url]: https://github.com/tensorush/Awesome-Languages-Learning#lizard-zig
