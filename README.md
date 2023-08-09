@@ -6,7 +6,7 @@
 [![Codecov][codecov-shield]][codecov-url]
 [![License][license-shield]][license-url]
 
-### Zig implementation of the [TypeID](https://github.com/jetpack-io/typeid), a type-safe extension of UUIDv7, created by the [jetpack.io team](https://www.jetpack.io/).
+### Zig implementation of [TypeID](https://github.com/jetpack-io/typeid), a type-safe extension of UUIDv7, created by the [jetpack.io team](https://www.jetpack.io/).
 
 #### :rocket: Usage
 
