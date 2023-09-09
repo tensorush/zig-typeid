@@ -1,4 +1,4 @@
-## :lizard: :id: **zig typeid**
+## :lizard: :information_source: **zig typeid**
 
 [![CI][ci-shield]][ci-url]
 [![CD][cd-shield]][cd-url]
