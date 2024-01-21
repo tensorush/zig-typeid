@@ -135,7 +135,7 @@ test "encode/decode" {
         var encoded = encode(bytes);
         var expected: [32]u8 = undefined;
         const padded_bytes = ([1]u8{0x00} ** 4) ++ bytes;
-        var expected_slice = encoder.encode(expected[0..], padded_bytes[0..])[6..32];
+        const expected_slice = encoder.encode(expected[0..], padded_bytes[0..])[6..32];
         try std.testing.expectEqualSlices(u8, expected_slice, encoded[0..]);
 
         const decoded = try decode(encoded);

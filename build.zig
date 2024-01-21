@@ -1,10 +1,10 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-    const root_source_file = std.Build.FileSource.relative("src/typeid.zig");
+    const root_source_file = std.Build.LazyPath.relative("src/typeid.zig");
 
     // Module
-    _ = b.addModule("typeid", .{ .source_file = root_source_file });
+    _ = b.addModule("typeid", .{ .root_source_file = root_source_file });
 
     // Dependencies
     const uuid_dep = b.dependency("uuid", .{});
@@ -21,10 +21,10 @@ pub fn build(b: *std.Build) void {
         .root_source_file = root_source_file,
         .target = b.standardTargetOptions(.{}),
         .optimize = b.standardOptimizeOption(.{}),
-        .version = .{ .major = 1, .minor = 1, .patch = 0 },
+        .version = .{ .major = 1, .minor = 1, .patch = 1 },
     });
-    lib.addModule("Uuid", uuid_mod);
-    lib.addModule("Base32", base32_mod);
+    lib.root_module.addImport("Uuid", uuid_mod);
+    lib.root_module.addImport("Base32", base32_mod);
 
     const lib_install = b.addInstallArtifact(lib, .{});
     lib_step.dependOn(&lib_install.step);
@@ -48,8 +48,8 @@ pub fn build(b: *std.Build) void {
     const tests = b.addTest(.{
         .root_source_file = root_source_file,
     });
-    tests.addModule("Uuid", uuid_mod);
-    tests.addModule("Base32", base32_mod);
+    tests.root_module.addImport("Uuid", uuid_mod);
+    tests.root_module.addImport("Base32", base32_mod);
 
     const tests_run = b.addRunArtifact(tests);
     tests_step.dependOn(&tests_run.step);

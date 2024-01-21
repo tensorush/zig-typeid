@@ -4,8 +4,6 @@ const std = @import("std");
 const Uuid = @import("Uuid");
 const base32 = @import("base32.zig");
 
-const hasGetPrefixFn = std.meta.trait.hasFn("getPrefix");
-
 pub const Error = error{
     InvalidPrefixCharacter,
     InvalidSuffixCharacter,
@@ -19,10 +17,7 @@ pub const Error = error{
 
 /// Type-safe extension of UUIDv7.
 pub fn TypeId(comptime T: type) Error!type {
-    const type_prefix = if (hasGetPrefixFn(T))
-        T.getPrefix()
-    else
-        return error.NoGetPrefixFn;
+    const type_prefix = if (@hasDecl(T, "getPrefix")) T.getPrefix() else return error.NoGetPrefixFn;
 
     if (type_prefix.len > 63) return Error.InvalidPrefixLength;
 
@@ -271,8 +266,8 @@ test "new/fromString" {
         const actual_prefix_tid = try prefix_tid.fromString(try std.fmt.bufPrint(exp_str[0..], "{s}", .{exp_prefix_tid}));
         try std.testing.expectEqualDeep(exp_prefix_tid, actual_prefix_tid);
 
-        var exp_empty_tid = try empty_tid.new("");
-        var actual_empty_tid = try empty_tid.fromString(try std.fmt.bufPrint(exp_str[0..], "{s}", .{exp_empty_tid}));
+        const exp_empty_tid = try empty_tid.new("");
+        const actual_empty_tid = try empty_tid.fromString(try std.fmt.bufPrint(exp_str[0..], "{s}", .{exp_empty_tid}));
         try std.testing.expectEqualDeep(exp_empty_tid, actual_empty_tid);
     }
 }
